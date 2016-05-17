@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 
 
+
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
@@ -27,7 +28,6 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.anz.MQHelloWorldAPI.transform.pojo.NumbersInput;
-import com.anz.MQHelloWorldAPI.transform.pojo.Result;
 import com.anz.common.dataaccess.models.iib.Operation;
 import com.anz.common.test.FlowTest;
 import com.anz.common.transform.TransformUtils;
@@ -104,61 +104,23 @@ public class MQHelloWorldAPIFlowTest extends FlowTest {
 		//Inject test message
 		injectData();
 		
-		//Test individual node outputs
-		testPreTransformNodeOutput();
-		testHttpResponseOutput();
-		testPostTransformNodeOutput();
+		testOutput();
 		
-
 	}
 	
 	
-	public void testPreTransformNodeOutput() throws ConfigManagerProxyPropertyNotInitializedException, XPathExpressionException, SAXException, IOException, ParserConfigurationException {	
+	public void testOutput() throws ConfigManagerProxyPropertyNotInitializedException, XPathExpressionException, SAXException, IOException, ParserConfigurationException {	
 		
-		// PreTransform Node
-		List<RecordedTestData> dataList = getTestDataList("Transform Request");
+		List<RecordedTestData> dataList = getTestDataList("MQ Output", true);
 		
 		String json = getNodeOutputJsonStringFromBlob(dataList.get(0));
 		NumbersInput out = gson.fromJson(json, NumbersInput.class);
 
 		assertNotNull(out);
-		assertEquals(105, out.getLeft());
+		assertEquals(5, out.getLeft());
 		assertEquals(7, out.getRight());
+		assertEquals("Hello World!", out.getText());
 		
 	}
 	
-	public void testHttpResponseOutput() throws ConfigManagerProxyPropertyNotInitializedException, XPathExpressionException, SAXException, IOException, ParserConfigurationException {	
-		
-		// PreTransform Node
-		List<RecordedTestData> dataList = getTestDataList("HTTP Request");
-		
-		String json = getNodeOutputJsonStringFromBlob(dataList.get(0));
-		JsonNode root = objectMapper.readTree(json);
-		
-		String element = root.at("/imeplementation").asText(); // The element can be specified as /Data/Account/right
-		assertEquals("Java_SpringBoot", element);
-		
-		element = root.at("/result").asText();
-		assertEquals("112", element);	
-		
-	}
-	
-	
-	public void testPostTransformNodeOutput() throws ConfigManagerProxyPropertyNotInitializedException, XPathExpressionException, SAXException, IOException, ParserConfigurationException {	
-		
-			
-		// PostTransform node
-		
-		List<RecordedTestData> dataList = getTestDataList("Transform Response");
-		
-		
-		String json = getNodeOutputJsonStringFromBlob(dataList.get(0));
-		NumbersInput out = gson.fromJson(json, NumbersInput.class);
-
-		assertNotNull(out);
-		assertEquals(0, out.getLeft());
-		assertEquals(0, out.getRight());
-		
-	
-	}
 }

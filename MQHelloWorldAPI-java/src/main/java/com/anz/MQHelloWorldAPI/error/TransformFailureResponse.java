@@ -69,9 +69,13 @@ public class TransformFailureResponse implements
 			errorString = ErrorStatusCode.InternalException;
 		}
 		
-		
-		// Set output terminal to alternate
-		metadata.setOutputTarget(OutputTarget.ALTERNATE);
+		// Create condition to route certain errors to Error Queue
+		if(false){
+			
+			// If condition met Set output terminal to alternate
+			metadata.setOutputTarget(OutputTarget.ALTERNATE);
+			
+		}
 		
 		
 
